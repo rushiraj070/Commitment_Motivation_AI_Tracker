@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}{{ goal.GoalName }} - CommitmentTracker{% endblock %}
+
+{% block extra_css %}
+<style>
+    .goal-detail {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .detail-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+    }
+    
+    .detail-header h2 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .detail-section {
+        background: #f7fafc;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .detail-value {
+        color: #2d3748;
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+    
+    .motivation-section {
+        background: #fef5e7;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 20px 0;
+        border-left: 4px solid #f39c12;
+    }
+    
+    .motivation-text {
+        font-size: 1.2em;
+        font-style: italic;
+        color: #2d3748;
+        line-height: 1.8;
+    }
+    
+    .timestamp {
+        font-size: 0.9em;
+        color: #718096;
+        margin-top: 15px;
+    }
+    
+    .actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .no-motivation {
+        text-align: center;
+        padding: 40px;
+        color: #718096;
+    }
+    
+    .progress-bar-container {
+        margin-top: 10px;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 25px;
+        background: #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+        text-align: center;
+        font-size: 1em;
+        color: #4a5568;
+        margin-top: 8px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="goal-detail">
+    <div class="detail-header">
+        <h2>🎯 {{ goal.GoalName }}</h2>
+        <p>Goal ID: {{ goal.GoalID }}</p>
+    </div>
+    
+    <div class="detail-section">
+        <span class="detail-label">👤 User ID</span>
+        <div class="detail-value">{{ goal.UserID }}</div>
+    </div>
+    
+    <div class="detail-section">
+        <span class="detail-label">📂 Category</span>
+        <div class="detail-value">{{ goal.GoalCategory or 'Not set' }}</div>
+    </div>
+    
+    {% if goal.GoalDescription %}
+    <div class="detail-section">
+        <span class="detail-label">📝 Description</span>
+        <div class="detail-value">{{ goal.GoalDescription }}</div>
+    </div>
+    {% endif %}
+    
+    <div class="detail-section">
+        <span class="detail-label">⭐ Priority</span>
+        <div class="detail-value">
+            {% if goal.Priority == 'High' %}🔴 High Priority
+            {% elif goal.Priority == 'Medium' %}🟡 Medium Priority
+            {% else %}🟢 Low Priority{% endif %}
+        </div>
+    </div>
+    
+    <div class="detail-section">
+        <span class="detail-label">📊 Status</span>
+        <div class="detail-value">
+            {% if goal.Status == 'Active' %}✅ Active
+            {% elif goal.Status == 'Paused' %}⏸️ Paused
+            {% elif goal.Status == 'Completed' %}🎉 Completed
+            {% else %}❌ Cancelled{% endif %}
+        </div>
+    </div>
+    
+    {% if goal.StartDate %}
+    <div class="detail-section">
+        <span class="detail-label">🚀 Start Date</span>
+        <div class="detail-value">{{ goal.StartDate }}</div>
+    </div>
+    {% endif %}
+    
+    <div class="detail-section">
+        <span class="detail-label">🏁 Target Date</span>
+        <div class="detail-value">{{ goal.TargetDate }}</div>
+    </div>
+    
+    {% if goal.ProgressPercentage is defined and goal.ProgressPercentage is not none %}
+    <div class="detail-section">
+        <span class="detail-label">📈 Progress</span>
+        <div class="progress-bar-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ goal.ProgressPercentage|int }}%"></div>
+            </div>
+            <div class="progress-text">{{ goal.ProgressPercentage|int }}% Complete</div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="detail-section">
+        <span class="detail-label">📊 Progress Details</span>
+        <div class="detail-value">{{ goal.ProgressDetails }}</div>
+    </div>
+    
+    {% if goal.Milestones %}
+    <div class="detail-section">
+        <span class="detail-label">🎯 Milestones</span>
+        <div class="detail-value" style="white-space: pre-line;">{{ goal.Milestones }}</div>
+    </div>
+    {% endif %}
+    
+    {% if goal.Obstacles %}
+    <div class="detail-section">
+        <span class="detail-label">🚧 Obstacles</span>
+        <div class="detail-value" style="white-space: pre-line;">{{ goal.Obstacles }}</div>
+    </div>
+    {% endif %}
+    
+    {% if goal.SuccessCriteria %}
+    <div class="detail-section">
+        <span class="detail-label">✅ Success Criteria</span>
+        <div class="detail-value" style="white-space: pre-line;">{{ goal.SuccessCriteria }}</div>
+    </div>
+    {% endif %}
+    
+    {% if goal.MotivationalMessage %}
+    <div class="motivation-section">
+        <span class="detail-label">💪 Motivational Message</span>
+        <div class="motivation-text">{{ goal.MotivationalMessage }}</div>
+        {% if goal.LastEncouragementDate %}
+        <div class="timestamp">
+            Generated on: {{ goal.LastEncouragementDate }}
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="no-motivation">
+        <h3>No motivational message yet</h3>
+        <p>Click "Generate Motivation" to create AI-powered encouragement for this goal!</p>
+    </div>
+    {% endif %}
+    
+    <div class="actions">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">⬅️ Back to Goals</a>
+        <a href="{{ url_for('edit_goal', goal_id=goal.GoalID) }}" class="btn btn-secondary">✏️ Edit Goal</a>
+        <a href="{{ url_for('generate_motivation') }}" class="btn btn-success">✨ Generate Motivation</a>
+    </div>
+</div>
+{% endblock %}

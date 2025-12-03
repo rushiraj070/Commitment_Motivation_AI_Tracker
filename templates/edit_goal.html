@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Goal - CommitmentTracker{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    input[type="range"] {
+        width: calc(100% - 80px);
+        margin-right: 10px;
+    }
+    
+    output {
+        display: inline-block;
+        width: 60px;
+        text-align: center;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .form-header h2 {
+        color: #667eea;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .goal-id-display {
+        background: #edf2f7;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #4a5568;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>✏️ Edit Goal</h2>
+        <p>Update your commitment details</p>
+    </div>
+    
+    <div class="goal-id-display">
+        <strong>Goal ID:</strong> {{ goal.GoalID }}
+    </div>
+    
+    <form method="POST" action="{{ url_for('edit_goal', goal_id=goal.GoalID) }}">
+        <div class="form-group">
+            <label for="user_id">👤 User ID</label>
+            <input type="text" id="user_id" name="user_id" required 
+                   value="{{ goal.UserID }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_name">🎯 Goal Name</label>
+            <input type="text" id="goal_name" name="goal_name" required 
+                   value="{{ goal.GoalName }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_category">📂 Category</label>
+            <select id="goal_category" name="goal_category" required>
+                <option value="Health & Fitness" {% if goal.GoalCategory == 'Health & Fitness' %}selected{% endif %}>🏃 Health & Fitness</option>
+                <option value="Career & Education" {% if goal.GoalCategory == 'Career & Education' %}selected{% endif %}>💼 Career & Education</option>
+                <option value="Personal Development" {% if goal.GoalCategory == 'Personal Development' %}selected{% endif %}>🌱 Personal Development</option>
+                <option value="Financial" {% if goal.GoalCategory == 'Financial' %}selected{% endif %}>💰 Financial</option>
+                <option value="Relationships" {% if goal.GoalCategory == 'Relationships' %}selected{% endif %}>❤️ Relationships</option>
+                <option value="Hobbies & Creativity" {% if goal.GoalCategory == 'Hobbies & Creativity' %}selected{% endif %}>🎨 Hobbies & Creativity</option>
+                <option value="Other" {% if goal.GoalCategory == 'Other' %}selected{% endif %}>📌 Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_description">📝 Description</label>
+            <textarea id="goal_description" name="goal_description">{{ goal.GoalDescription or '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="start_date">🚀 Start Date</label>
+            <input type="date" id="start_date" name="start_date" 
+                   value="{{ goal.StartDate or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="target_date">🏁 Target Date</label>
+            <input type="date" id="target_date" name="target_date" required 
+                   value="{{ goal.TargetDate }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="priority">⭐ Priority</label>
+            <select id="priority" name="priority" required>
+                <option value="High" {% if goal.Priority == 'High' %}selected{% endif %}>🔴 High</option>
+                <option value="Medium" {% if goal.Priority == 'Medium' %}selected{% endif %}>🟡 Medium</option>
+                <option value="Low" {% if goal.Priority == 'Low' %}selected{% endif %}>🟢 Low</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">📊 Status</label>
+            <select id="status" name="status">
+                <option value="Active" {% if goal.Status == 'Active' %}selected{% endif %}>✅ Active</option>
+                <option value="Paused" {% if goal.Status == 'Paused' %}selected{% endif %}>⏸️ Paused</option>
+                <option value="Completed" {% if goal.Status == 'Completed' %}selected{% endif %}>🎉 Completed</option>
+                <option value="Cancelled" {% if goal.Status == 'Cancelled' %}selected{% endif %}>❌ Cancelled</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="progress_percentage">📈 Progress (%)</label>
+            <input type="range" id="progress_percentage" name="progress_percentage" 
+                   min="0" max="100" value="{{ goal.ProgressPercentage or 0 }}" 
+                   oninput="this.nextElementSibling.value = this.value + '%'">
+            <output>{{ goal.ProgressPercentage or 0 }}%</output>
+        </div>
+        
+        <div class="form-group">
+            <label for="progress_details">📊 Progress Details</label>
+            <textarea id="progress_details" name="progress_details" required>{{ goal.ProgressDetails }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="milestones">🎯 Milestones</label>
+            <textarea id="milestones" name="milestones">{{ goal.Milestones or '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="obstacles">🚧 Obstacles</label>
+            <textarea id="obstacles" name="obstacles">{{ goal.Obstacles or '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="success_criteria">✅ Success Criteria</label>
+            <textarea id="success_criteria" name="success_criteria">{{ goal.SuccessCriteria or '' }}</textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">💾 Update Goal</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

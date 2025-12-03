@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test</title>
+</head>
+<body style="background: #667eea; color: white; font-family: Arial; padding: 50px; text-align: center;">
+    <h1 style="font-size: 3em;">✅ Server is Working!</h1>
+    <p style="font-size: 1.5em;">If you see this, Flask is running correctly.</p>
+    <hr style="margin: 30px 0;">
+    <h2>Debug Info:</h2>
+    <p>Goals found: {{ goals|length }}</p>
+    <div style="background: white; color: black; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 10px; text-align: left;">
+        <h3>Goals Data:</h3>
+        {% for goal in goals %}
+        <div style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+            <strong>{{ goal.GoalName }}</strong><br>
+            ID: {{ goal.GoalID }}<br>
+            User: {{ goal.UserID }}<br>
+            Target: {{ goal.TargetDate }}
+        </div>
+        {% endfor %}
+    </div>
+    <a href="/" style="color: white; font-size: 1.2em; text-decoration: underline;">Try Main Page</a>
+</body>
+</html>

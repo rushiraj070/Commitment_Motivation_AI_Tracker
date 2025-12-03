@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Add Goal - CommitmentTracker{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    input[type="range"] {
+        width: calc(100% - 80px);
+        margin-right: 10px;
+    }
+    
+    output {
+        display: inline-block;
+        width: 60px;
+        text-align: center;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .form-header h2 {
+        color: #667eea;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .helper-text {
+        font-size: 0.9em;
+        color: #718096;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>➕ Add New Goal</h2>
+        <p>Set a new commitment and track your progress</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('add_goal') }}">
+        <div class="form-group">
+            <label for="user_id">👤 User ID</label>
+            <input type="text" id="user_id" name="user_id" required 
+                   placeholder="e.g., user-123">
+            <div class="helper-text">Your unique user identifier</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_name">🎯 Goal Name</label>
+            <input type="text" id="goal_name" name="goal_name" required 
+                   placeholder="e.g., Exercise Daily">
+            <div class="helper-text">What do you want to achieve?</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_category">📂 Category</label>
+            <select id="goal_category" name="goal_category" required>
+                <option value="">Select a category...</option>
+                <option value="Health & Fitness">🏃 Health & Fitness</option>
+                <option value="Career & Education">💼 Career & Education</option>
+                <option value="Personal Development">🌱 Personal Development</option>
+                <option value="Financial">💰 Financial</option>
+                <option value="Relationships">❤️ Relationships</option>
+                <option value="Hobbies & Creativity">🎨 Hobbies & Creativity</option>
+                <option value="Other">📌 Other</option>
+            </select>
+            <div class="helper-text">Choose the category that best fits your goal</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="goal_description">📝 Description (Optional)</label>
+            <textarea id="goal_description" name="goal_description" 
+                      placeholder="Provide more details about your goal..."></textarea>
+            <div class="helper-text">Add context and background information</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="start_date">🚀 Start Date</label>
+            <input type="date" id="start_date" name="start_date">
+            <div class="helper-text">When did you start working on this goal?</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="target_date">🏁 Target Date</label>
+            <input type="date" id="target_date" name="target_date" required>
+            <div class="helper-text">When do you want to achieve this goal?</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="priority">⭐ Priority</label>
+            <select id="priority" name="priority" required>
+                <option value="High">🔴 High</option>
+                <option value="Medium" selected>🟡 Medium</option>
+                <option value="Low">🟢 Low</option>
+            </select>
+            <div class="helper-text">How important is this goal to you?</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">📊 Status</label>
+            <select id="status" name="status">
+                <option value="Active" selected>✅ Active</option>
+                <option value="Paused">⏸️ Paused</option>
+                <option value="Completed">🎉 Completed</option>
+                <option value="Cancelled">❌ Cancelled</option>
+            </select>
+            <div class="helper-text">Current status of your goal</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="progress_percentage">📈 Progress (%)</label>
+            <input type="range" id="progress_percentage" name="progress_percentage" 
+                   min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+            <output>0%</output>
+            <div class="helper-text">How much have you completed?</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="progress_details">📊 Progress Details</label>
+            <textarea id="progress_details" name="progress_details" required 
+                      placeholder="Describe your current progress..."></textarea>
+            <div class="helper-text">Share your current status and achievements</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="milestones">🎯 Milestones (Optional)</label>
+            <textarea id="milestones" name="milestones" 
+                      placeholder="List key milestones (one per line)..."></textarea>
+            <div class="helper-text">Break down your goal into smaller achievements</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="obstacles">🚧 Obstacles (Optional)</label>
+            <textarea id="obstacles" name="obstacles" 
+                      placeholder="What challenges are you facing?"></textarea>
+            <div class="helper-text">Identify potential roadblocks</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="success_criteria">✅ Success Criteria (Optional)</label>
+            <textarea id="success_criteria" name="success_criteria" 
+                      placeholder="How will you know you've succeeded?"></textarea>
+            <div class="helper-text">Define what success looks like</div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">💾 Save Goal</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
